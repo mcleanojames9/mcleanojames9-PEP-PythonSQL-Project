@@ -50,16 +50,15 @@ def main():
 def load_and_clean_users(file_path):
 
     with open("resources/users.csv", "r") as users_file:
-        users = users_file.readlines()
-        columns = [col_name.strip() for col_name in users[0].split(",")]
-        print(columns)
-        for user in users[1:]:
-            user_name = user.split(",")
-            if len(user_name) == 2:
-                clean_name = [name.strip() for name in user_name]
-                if '' not in clean_name:
-                    cursor.execute(f"INSERT INTO users ({columns[0]}, {columns[1]}) VALUES ('{clean_name[0]}', '{clean_name[1]}')")
+        clean_users = [line.strip() for line in users_file.readlines()]
+        all_lines = [tuple(line.split(",")) for line in clean_users]
+        columns = all_lines[0]
+        rows = all_lines[1:]
+        for user in rows:
+            if len(user) == 2 and '' not in user:
+                cursor.execute(f"INSERT INTO users {columns} VALUES {user}")
 
+        print("\n Querying users table")
         cursor.execute("SELECT * from users")
         print(cursor.fetchall())
 
@@ -69,9 +68,17 @@ def load_and_clean_users(file_path):
 def load_and_clean_call_logs(file_path):
 
     with open("resources/callLogs.csv", "r") as logs_file:
-        logs = logs_file.readlines()
-        columns = [col_name.strip for col_name in logs[0].split(",")]
-        print(columns)
+        clean_logs = [line.strip() for line in logs_file.readlines()]
+        all_lines = [tuple(line.split(",")) for line in clean_logs]
+        columns = all_lines[0]
+        rows = all_lines[1:]
+        for log in rows:
+            if len(log) == 5 and '' not in log:
+                cursor.execute(f"INSERT INTO callLogs {columns} values {log}")
+
+        print("\n Querying callLogs table")
+        cursor.execute("select * from callLogs")
+        print(cursor.fetchall())
 
 
 # This function will write analytics data to testUserAnalytics.csv - average call time, and number of calls per user.
