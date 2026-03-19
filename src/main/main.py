@@ -71,7 +71,8 @@ def load_and_clean_call_logs(file_path):
         clean_logs = [line.strip() for line in logs_file.readlines()]
         all_lines = [tuple(line.split(",")) for line in clean_logs]
         # columns = all_lines[0]
-        # Hard-coding column names because the columns in the 
+        # Hard-coding column names because the columns in the testCallLogs.csv are incorrect!
+        columns = ("phoneNumber","startTime","endTime","direction","userId")
         rows = all_lines[1:]
         for log in rows:
             if len(log) == 5 and '' not in log:
