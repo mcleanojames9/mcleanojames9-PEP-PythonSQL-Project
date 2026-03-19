@@ -59,9 +59,9 @@ def load_and_clean_users(file_path):
             if len(user) == 2 and '' not in user:
                 cursor.execute(f"INSERT INTO users {columns} VALUES {user}")
 
-# EXPLANATION!!!
-# The testCallLogs.csv is in the incorrect format to work with the original load_and_clean_call_logs function
-
+# !!!EXPLANATION!!!
+# The testCallLogs.csv includes the columns: userId,avgDuration,numCalls
+# These columns do not coincide with the callLogs Table columns
 
 # This function will load the callLogs.csv file into the callLogs table, discarding any records with incomplete data
 def load_and_clean_call_logs(file_path):
@@ -70,7 +70,8 @@ def load_and_clean_call_logs(file_path):
     # with open("resources/callLogs.csv", "r") as logs_file:
         clean_logs = [line.strip() for line in logs_file.readlines()]
         all_lines = [tuple(line.split(",")) for line in clean_logs]
-        columns = all_lines[0]
+        # columns = all_lines[0]
+        # Hard-coding column names because the columns in the 
         rows = all_lines[1:]
         for log in rows:
             if len(log) == 5 and '' not in log:
