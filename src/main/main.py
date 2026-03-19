@@ -49,13 +49,29 @@ def main():
 # This function will load the users.csv file into the users table, discarding any records with incomplete data
 def load_and_clean_users(file_path):
 
-    print("TODO: load_users")
+    with open("resources/users.csv", "r") as users_file:
+        users = users_file.readlines()
+        columns = [col_name.strip() for col_name in users[0].split(",")]
+        print(columns)
+        for user in users[1:]:
+            user_name = user.split(",")
+            if len(user_name) == 2:
+                clean_name = [name.strip() for name in user_name]
+                if '' not in clean_name:
+                    cursor.execute(f"INSERT INTO users ({columns[0]}, {columns[1]}) VALUES ('{clean_name[0]}', '{clean_name[1]}')")
+
+        cursor.execute("SELECT * from users")
+        print(cursor.fetchall())
+
 
 
 # This function will load the callLogs.csv file into the callLogs table, discarding any records with incomplete data
 def load_and_clean_call_logs(file_path):
 
-    print("TODO: load_call_logs")
+    with open("resources/callLogs.csv", "r") as logs_file:
+        logs = logs_file.readlines()
+        columns = [col_name.strip for col_name in logs[0].split(",")]
+        print(columns)
 
 
 # This function will write analytics data to testUserAnalytics.csv - average call time, and number of calls per user.
