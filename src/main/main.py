@@ -36,7 +36,7 @@ def main():
     write_ordered_calls('../../resources/orderedCalls.csv')
 
     # Helper method that prints the contents of the users and callLogs tables. Uncomment to see data.
-    select_from_users_and_call_logs()
+    # select_from_users_and_call_logs()
 
     # Close the cursor and connection. main function ends here.
     cursor.close()
@@ -50,7 +50,6 @@ def main():
 def load_and_clean_users(file_path):
 
     with open(file_path, "r") as users_file:
-    # with open("resources/users.csv", "r") as users_file:
         clean_users = [line.strip() for line in users_file.readlines()]
         all_lines = [tuple(line.split(",")) for line in clean_users]
         columns = all_lines[0]
@@ -59,19 +58,24 @@ def load_and_clean_users(file_path):
             if len(user) == 2 and '' not in user:
                 cursor.execute(f"INSERT INTO users {columns} VALUES {user}")
 
-# !!!EXPLANATION!!!
-# The testCallLogs.csv includes the columns: userId,avgDuration,numCalls
-# These columns do not coincide with the callLogs Table columns
 
 # This function will load the callLogs.csv file into the callLogs table, discarding any records with incomplete data
+
+""" 
+    **ATTENTION** Please Note:
+    The testCallLogs.csv contains incorrect column names that do not match the data
+    Columns in the file: userId,avgDuration,numCalls 
+    (^These are the columns which are written to the userAnalytics.csv in the next step)
+    The columns should be phoneNumber,startTime,endTime,direction,userId
+"""
+
 def load_and_clean_call_logs(file_path):
 
     with open(file_path, "r") as logs_file:
-    # with open("resources/callLogs.csv", "r") as logs_file:
         clean_logs = [line.strip() for line in logs_file.readlines()]
         all_lines = [tuple(line.split(",")) for line in clean_logs]
         # columns = all_lines[0]
-        # Hard-coding column names because the columns in the testCallLogs.csv are incorrect!
+        # Hard-coding column names because the columns in the testCallLogs.csv are incorrect
         columns = ("phoneNumber","startTime","endTime","direction","userId")
         rows = all_lines[1:]
         for log in rows:
@@ -89,7 +93,6 @@ def write_user_analytics(csv_file_path):
                     GROUP BY userId""")
     results = cursor.fetchall()
 
-    # with open("resources/userAnalytics.csv", "w") as user_file:
     with open(csv_file_path, "w") as user_file:
         columns = "userId,avgDuration,numCalls\n"
         user_file.write(columns)
@@ -105,7 +108,6 @@ def write_ordered_calls(csv_file_path):
     results = cursor.fetchall()
 
     with open(csv_file_path, "w") as file:
-    # with open("resources/orderedCalls.csv", "w") as file:
         columns = "callId,phoneNumber,startTime,endTime,direction,userId\n"
         file.write(columns)
         for row in results:
