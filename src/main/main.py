@@ -49,7 +49,8 @@ def main():
 # This function will load the users.csv file into the users table, discarding any records with incomplete data
 def load_and_clean_users(file_path):
 
-    with open("resources/users.csv", "r") as users_file:
+    with open(file_path, "r") as users_file:
+    # with open("resources/users.csv", "r") as users_file:
         clean_users = [line.strip() for line in users_file.readlines()]
         all_lines = [tuple(line.split(",")) for line in clean_users]
         columns = all_lines[0]
@@ -62,7 +63,8 @@ def load_and_clean_users(file_path):
 # This function will load the callLogs.csv file into the callLogs table, discarding any records with incomplete data
 def load_and_clean_call_logs(file_path):
 
-    with open("resources/callLogs.csv", "r") as logs_file:
+    with open(file_path, "r") as logs_file:
+    # with open("resources/callLogs.csv", "r") as logs_file:
         clean_logs = [line.strip() for line in logs_file.readlines()]
         all_lines = [tuple(line.split(",")) for line in clean_logs]
         columns = all_lines[0]
@@ -82,7 +84,8 @@ def write_user_analytics(csv_file_path):
                     GROUP BY userId""")
     results = cursor.fetchall()
 
-    with open("resources/userAnalytics.csv", "w") as user_file:
+    # with open("resources/userAnalytics.csv", "w") as user_file:
+    with open(csv_file_path, "w") as user_file:
         columns = "userId,avgDuration,numCalls\n"
         user_file.write(columns)
         for row in results:
@@ -96,7 +99,8 @@ def write_ordered_calls(csv_file_path):
     cursor.execute("SELECT * FROM callLogs ORDER BY userId, startTime")
     results = cursor.fetchall()
 
-    with open("resources/orderedCalls.csv", "w") as file:
+    with open(csv_file_path, "w") as file:
+    # with open("resources/orderedCalls.csv", "w") as file:
         columns = "callId,phoneNumber,startTime,endTime,direction,userId\n"
         file.write(columns)
         for row in results:
