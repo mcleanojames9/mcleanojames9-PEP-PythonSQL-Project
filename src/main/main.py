@@ -36,7 +36,7 @@ def main():
     write_ordered_calls('../../resources/orderedCalls.csv')
 
     # Helper method that prints the contents of the users and callLogs tables. Uncomment to see data.
-    # select_from_users_and_call_logs()
+    select_from_users_and_call_logs()
 
     # Close the cursor and connection. main function ends here.
     cursor.close()
@@ -56,7 +56,7 @@ def load_and_clean_users(file_path):
         rows = all_lines[1:]
         for user in rows:
             if len(user) == 2 and '' not in user:
-                cursor.execute(f"INSERT INTO users {columns} VALUES {user}")
+                cursor.execute(f"INSERT INTO users {columns} VALUES (?,?)", user)
 
 
 # This function will load the callLogs.csv file into the callLogs table, discarding any records with incomplete data
@@ -80,7 +80,7 @@ def load_and_clean_call_logs(file_path):
         rows = all_lines[1:]
         for log in rows:
             if len(log) == 5 and '' not in log:
-                cursor.execute(f"INSERT INTO callLogs {columns} values {log}")
+                cursor.execute(f"INSERT INTO callLogs {columns} values (?,?,?,?,?)", log)
 
 
 # This function will write analytics data to testUserAnalytics.csv - average call time, and number of calls per user.
